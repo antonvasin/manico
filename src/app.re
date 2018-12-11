@@ -1,21 +1,44 @@
-[%bs.raw {|require('./app.css')|}];
+module Styles = {
+  open Css;
 
-[@bs.module] external logo : string = "./logo.svg";
+  let appWrapper = style([padding(px(32))]);
+};
 
-let component = ReasonReact.statelessComponent("App");
+type guitarString = {
+  tuning: string,
+  notes: list(String.note),
+};
 
-let make = (~message, _children) => {
+type state = {strings: list(guitarString)};
+
+type action =
+  | Toggle;
+
+let component = ReasonReact.reducerComponent("App");
+
+let make = _children => {
   ...component,
-  render: _self =>
-    <div className="App">
-      <div className="App-header">
-        <img src=logo className="App-logo" alt="logo" />
-        <h2> (ReasonReact.string(message)) </h2>
-      </div>
-      <p className="App-intro">
-        (ReasonReact.string("To get started, edit"))
-        <code> (ReasonReact.string(" src/app.re ")) </code>
-        (ReasonReact.string("and save to reload."))
-      </p>
+
+  initialState: () => {
+    strings: [{tuning: "e", notes: [{fret: 3, message: None}]}],
+  },
+
+  reducer: (action, state) =>
+    switch (action) {
+    | Toggle => ReasonReact.NoUpdate
+    },
+
+  render: self =>
+    <div className=Styles.appWrapper>
+      {
+        ReasonReact.array(
+          Array.of_list(
+            List.map(
+              ({tuning, notes}) => <String notes tuning />,
+              self.state.strings,
+            ),
+          ),
+        )
+      }
     </div>,
 };
