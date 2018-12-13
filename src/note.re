@@ -15,6 +15,10 @@ let note =
     display(flexBox),
     justifyContent(center),
     alignItems(center),
+    userSelect(none),
+    cursor(`pointer),
+    transition(~duration=200, ~timingFunction=easeOut, "backgroundColor"),
+    hover([backgroundColor(dodgerblue)]),
   ]);
 
 let make = (~fret: int, _children) => {
