@@ -11,32 +11,34 @@ module Styles = {
   let stringStyle =
     style([
       display(flexBox),
-      backgroundColor(silver),
       width(`percent(100.)),
       position(relative),
-      height(px(32)),
       padding2(~v=px(4), ~h=px(0)),
     ]);
 
   let flex = style([display(flexBox)]);
 };
 
-let make = (~tuning: string, ~notes: list(note), _children) => {
+let make = (~tuning: string, ~notes: list(note), ~onClick, _children) => {
   ...component,
   render: _self =>
     <div className=Styles.flex>
       {ReasonReact.string(tuning)}
       <div className=Styles.stringStyle>
-        {
-          ReasonReact.array(
-            Array.of_list(
-              List.map(
-                ({fret}) => <Note fret key={string_of_int(fret)} />,
-                notes,
-              ),
-            ),
-          )
-        }
+        {ReasonReact.array(
+           Array.of_list(
+             List.mapi(
+               (i, {fret}) =>
+                 <Note
+                   key={string_of_int(i)}
+                   filled={fret !== 0}
+                   fret={i + 1}
+                   onClick
+                 />,
+               notes,
+             ),
+           ),
+         )}
       </div>
     </div>,
 };
